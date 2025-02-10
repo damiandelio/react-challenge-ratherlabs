@@ -1,0 +1,8 @@
+# .prettierignore
+node_modules
+dist
+.vite
+build
+.cache
+public
+*.lock
