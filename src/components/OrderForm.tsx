@@ -76,7 +76,7 @@ export const OrderForm = memo(() => {
   );
 
   return (
-    <Paper sx={{ p: 2, m: 2 }}>
+    <Paper sx={{ p: 2 }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Order Direction */}
         <RadioGroup row {...directionField}>
