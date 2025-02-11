@@ -10,8 +10,10 @@ import {
   RadioGroup,
   Button,
   Typography,
+  Box,
 } from '@mui/material';
 import { useOrderStore } from '../state/orderState';
+import { useCryptoPrice } from '../hooks/useCryptoPrice';
 import { convertLocalToUtc, convertUtcToLocal } from '../common/helpers/time';
 import {
   OrderDirection,
@@ -24,11 +26,8 @@ const CRYPTOCURRENCIES = [
   { label: 'Ethereum', value: Cryptocurrency.Ethereum },
 ];
 
-const usdValue = 100; // TODO: Should be fetched from an API
-
 export const OrderForm = memo(() => {
   const addOrder = useOrderStore((state) => state.addOrder);
-  // const updateOrder = useOrderStore(state => state.updateOrder);
 
   const { control, handleSubmit } = useForm<OrderFormValues>({
     defaultValues: {
@@ -63,6 +62,10 @@ export const OrderForm = memo(() => {
     rules: { required: true },
   });
 
+  const { data: price, refetch: refetchCryptoPrice } = useCryptoPrice(
+    cryptocurrencyField.value,
+  );
+
   const onSubmit = useCallback(
     (data: OrderFormValues) => {
       addOrder({
@@ -75,60 +78,81 @@ export const OrderForm = memo(() => {
     [addOrder],
   );
 
+  const valueInUsd: number =
+    price !== undefined ? price * Number(quantityField.value) : 0;
+
   return (
     <Paper sx={{ p: 2 }}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {/* Order Direction */}
-        <RadioGroup row {...directionField}>
-          <FormControlLabel
-            value={OrderDirection.Buy}
-            control={<Radio />}
-            label="Buy"
-          />
-          <FormControlLabel
-            value={OrderDirection.Sell}
-            control={<Radio />}
-            label="Sell"
-          />
-        </RadioGroup>
+        <Box sx={{ display: 'grid', gap: '1rem' }}>
+          {/* Order Direction */}
+          <RadioGroup row {...directionField}>
+            <FormControlLabel
+              value={OrderDirection.Buy}
+              control={<Radio />}
+              label="Buy"
+            />
+            <FormControlLabel
+              value={OrderDirection.Sell}
+              control={<Radio />}
+              label="Sell"
+            />
+          </RadioGroup>
 
-        {/* Cryptocurrency */}
-        <Select {...cryptocurrencyField}>
-          {CRYPTOCURRENCIES.map((crypto) => (
-            <MenuItem key={crypto.value} value={crypto.value}>
-              {crypto.label}
-            </MenuItem>
-          ))}
-        </Select>
+          {/* Cryptocurrency */}
+          <Select {...cryptocurrencyField}>
+            {CRYPTOCURRENCIES.map((crypto) => (
+              <MenuItem key={crypto.value} value={crypto.value}>
+                {crypto.label}
+              </MenuItem>
+            ))}
+          </Select>
 
-        {/* Quantity */}
-        <TextField type="number" {...quantityField} placeholder="Quantity" />
-        <Typography>
-          Equivalent USD: {usdValue !== null ? usdValue.toFixed(2) : '—'}
-        </Typography>
+          {/* Quantity */}
+          <div>
+            <TextField
+              type="number"
+              {...quantityField}
+              onChange={(e) => {
+                quantityField.onChange(e);
+                refetchCryptoPrice(); // TODO: Could be debounced
+              }}
+              placeholder="Quantity"
+              sx={{ width: '100%' }}
+            />
+            <Typography variant="body2" color="textSecondary">
+              Equivalent USD: {valueInUsd.toFixed(2)}
+            </Typography>
+          </div>
 
-        {/* Expiration Date */}
-        <TextField
-          type="datetime-local"
-          {...expirationField}
-          value={
-            expirationField.value
-              ? convertUtcToLocal(expirationField.value)
-              : ''
-          }
-          onChange={(e) => {
-            expirationField.onChange({
-              ...e,
-              target: { value: convertLocalToUtc(e.target.value) },
-            });
-          }}
-        />
-        <Typography>UTC Time: {expirationField.value || '—'}</Typography>
+          {/* Expiration Date */}
+          <div>
+            <TextField
+              type="datetime-local"
+              {...expirationField}
+              value={
+                expirationField.value
+                  ? convertUtcToLocal(expirationField.value)
+                  : ''
+              }
+              onChange={(e) => {
+                expirationField.onChange({
+                  ...e,
+                  target: { value: convertLocalToUtc(e.target.value) },
+                });
+              }}
+              sx={{ width: '100%' }}
+            />
+            <Typography variant="body2" color="textSecondary">
+              UTC Time: {expirationField.value || '—'}
+            </Typography>
+          </div>
 
-        {/* Submit Button */}
-        <Button type="submit" variant="contained" color="primary">
-          Place Order
-        </Button>
+          {/* Submit Button */}
+          <Button type="submit" variant="contained" color="primary">
+            Place Order
+          </Button>
+        </Box>
       </form>
     </Paper>
   );

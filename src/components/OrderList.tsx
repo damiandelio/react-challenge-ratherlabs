@@ -8,6 +8,7 @@ import {
   IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { useOrderStore } from '../state/orderState';
 import type { Order } from '../common/types';
 
@@ -38,17 +39,31 @@ const OrderItem = memo<Order>(
       [deleteOrder, id],
     );
 
+    const handleEditOrder = useCallback(() => {
+      // TODO: Add the logic to edit the order
+    }, []);
+
     return (
       <ListItem
         divider
         secondaryAction={
-          <IconButton
-            edge="end"
-            aria-label="delete"
-            onClick={handleDeleteOrder}
-          >
-            <DeleteIcon />
-          </IconButton>
+          <>
+            <IconButton
+              aria-label="edit"
+              onClick={handleEditOrder}
+              sx={{ m: 0 }}
+              disabled
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              aria-label="delete"
+              onClick={handleDeleteOrder}
+              sx={{ m: 0 }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </>
         }
       >
         <ListItemText
