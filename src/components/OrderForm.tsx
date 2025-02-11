@@ -66,6 +66,24 @@ export const OrderForm = memo(() => {
     cryptocurrencyField.value,
   );
 
+  const handleQuantityChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      quantityField.onChange(e);
+      refetchCryptoPrice(); // TODO: This call could be debounced
+    },
+    [quantityField, refetchCryptoPrice],
+  );
+
+  const handleExpirationChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      expirationField.onChange({
+        ...e,
+        target: { value: convertLocalToUtc(e.target.value) },
+      });
+    },
+    [expirationField],
+  );
+
   const onSubmit = useCallback(
     (data: OrderFormValues) => {
       addOrder({
@@ -113,10 +131,7 @@ export const OrderForm = memo(() => {
             <TextField
               type="number"
               {...quantityField}
-              onChange={(e) => {
-                quantityField.onChange(e);
-                refetchCryptoPrice(); // TODO: Could be debounced
-              }}
+              onChange={handleQuantityChange}
               placeholder="Quantity"
               sx={{ width: '100%' }}
             />
@@ -135,12 +150,7 @@ export const OrderForm = memo(() => {
                   ? convertUtcToLocal(expirationField.value)
                   : ''
               }
-              onChange={(e) => {
-                expirationField.onChange({
-                  ...e,
-                  target: { value: convertLocalToUtc(e.target.value) },
-                });
-              }}
+              onChange={handleExpirationChange}
               sx={{ width: '100%' }}
             />
             <Typography variant="body2" color="textSecondary">
