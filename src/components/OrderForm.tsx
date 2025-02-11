@@ -27,7 +27,7 @@ const CRYPTOCURRENCIES = [
 const usdValue = 100; // TODO: Should be fetched from an API
 
 export const OrderForm = memo(() => {
-  const addOrder = useOrderStore(state => state.addOrder);
+  const addOrder = useOrderStore((state) => state.addOrder);
   // const updateOrder = useOrderStore(state => state.updateOrder);
 
   const { control, handleSubmit } = useForm<OrderFormValues>({
@@ -94,7 +94,7 @@ export const OrderForm = memo(() => {
 
         {/* Cryptocurrency */}
         <Select {...cryptocurrencyField}>
-          {CRYPTOCURRENCIES.map(crypto => (
+          {CRYPTOCURRENCIES.map((crypto) => (
             <MenuItem key={crypto.value} value={crypto.value}>
               {crypto.label}
             </MenuItem>
@@ -116,7 +116,7 @@ export const OrderForm = memo(() => {
               ? convertUtcToLocal(expirationField.value)
               : ''
           }
-          onChange={e => {
+          onChange={(e) => {
             expirationField.onChange({
               ...e,
               target: { value: convertLocalToUtc(e.target.value) },

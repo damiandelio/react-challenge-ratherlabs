@@ -11,25 +11,25 @@ interface OrderState {
 
 export const useOrderStore = create<OrderState>()(
   persist(
-    set => ({
+    (set) => ({
       orders: [],
 
-      addOrder: order => {
+      addOrder: (order) => {
         const newOrder: Order = { ...order, id: crypto.randomUUID() };
-        set(state => ({ orders: [...state.orders, newOrder] }));
+        set((state) => ({ orders: [...state.orders, newOrder] }));
       },
 
-      updateOrder: updatedOrder => {
-        set(state => ({
-          orders: state.orders.map(order =>
+      updateOrder: (updatedOrder) => {
+        set((state) => ({
+          orders: state.orders.map((order) =>
             order.id === updatedOrder.id ? updatedOrder : order,
           ),
         }));
       },
 
-      deleteOrder: id => {
-        set(state => ({
-          orders: state.orders.filter(order => order.id !== id),
+      deleteOrder: (id) => {
+        set((state) => ({
+          orders: state.orders.filter((order) => order.id !== id),
         }));
       },
     }),
