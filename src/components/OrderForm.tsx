@@ -50,12 +50,12 @@ export const OrderForm = memo(() => {
 
   const { field: quantityField } = useController({
     name: 'quantity',
-    rules: { required: 'Quantity required' },
+    rules: { required: 'Quantity required.' },
   });
 
   const { field: expirationField } = useController({
     name: 'expiration',
-    rules: { required: 'Expiration date required' },
+    rules: { required: 'Expiration date required.' },
   });
 
   const { data: price, refetch: refetchCryptoPrice } = useCryptoPrice(
@@ -140,6 +140,7 @@ export const OrderForm = memo(() => {
               type="number"
               {...quantityField}
               onChange={handleQuantityChange}
+              label="Quantity"
               placeholder="Quantity"
               sx={{ width: '100%' }}
             />

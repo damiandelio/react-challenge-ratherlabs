@@ -29,26 +29,28 @@ export const OrderItem = memo<OrderItemProps>(
       <ListItem
         divider
         secondaryAction={
-          <>
-            <IconButton
-              aria-label="edit"
-              onClick={handleEditOrder}
-              sx={{ m: 0 }}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              aria-label="delete"
-              onClick={handleDeleteOrder}
-              sx={{ m: 0 }}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </>
+          !selected ? (
+            <>
+              <IconButton
+                aria-label="edit"
+                onClick={handleEditOrder}
+                sx={{ m: 0 }}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                aria-label="delete"
+                onClick={handleDeleteOrder}
+                sx={{ m: 0 }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </>
+          ) : null
         }
         sx={{
           backgroundColor: selected ? 'rgba(156, 39, 176, 0.1)' : 'none',
-          transition: 'background-color 0.3s ease-in-out',
+          transition: 'background-color 0.2s ease-in-out',
         }}
       >
         <ListItemText
