@@ -6,7 +6,7 @@ This project is a React-based OTC (Over-the-Counter) order management Single Pag
 
 ## Deploy Preview
 
-This project is deployed using Vercel. You can view the latest deployment here: [Live Preview](https://otc-react-r70k2otyt-damin-de-lios-projects.vercel.app/).
+This project is deployed using Vercel. You can view the latest deployment here: [Live Preview](https://otc-react.vercel.app/).
 
 ## Tech Stack
 
