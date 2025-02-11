@@ -17,6 +17,7 @@ export interface Order {
 }
 
 export interface OrderFormValues {
+  id: string;
   direction: OrderDirection;
   cryptocurrency: Cryptocurrency;
   quantity: string;

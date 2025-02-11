@@ -1,22 +1,29 @@
 import { memo, useCallback } from 'react';
+import type { UseFormReset } from 'react-hook-form';
 import { ListItem, ListItemText, Typography, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useOrderStore } from '../state/orderState';
-import type { Order } from '../common/types';
+import type { Order, OrderFormValues } from '../common/types';
 
-export const OrderItem = memo<Order>(
-  ({ id, direction, cryptocurrency, quantity, expiration }) => {
+interface OrderItemProps {
+  order: Order;
+  selected: boolean;
+  formReset: UseFormReset<OrderFormValues>;
+}
+
+export const OrderItem = memo<OrderItemProps>(
+  ({ order, selected, formReset }) => {
     const deleteOrder = useOrderStore((state) => state.deleteOrder);
 
     const handleDeleteOrder = useCallback(
-      () => deleteOrder(id),
-      [deleteOrder, id],
+      () => deleteOrder(order.id),
+      [deleteOrder, order.id],
     );
 
     const handleEditOrder = useCallback(() => {
-      // TODO: Add the logic to edit the order
-    }, []);
+      formReset({ ...order, quantity: String(order.quantity) });
+    }, [order, formReset]);
 
     return (
       <ListItem
@@ -27,7 +34,6 @@ export const OrderItem = memo<Order>(
               aria-label="edit"
               onClick={handleEditOrder}
               sx={{ m: 0 }}
-              disabled
             >
               <EditIcon />
             </IconButton>
@@ -40,14 +46,18 @@ export const OrderItem = memo<Order>(
             </IconButton>
           </>
         }
+        sx={{
+          backgroundColor: selected ? 'rgba(156, 39, 176, 0.1)' : 'none',
+          transition: 'background-color 0.3s ease-in-out',
+        }}
       >
         <ListItemText
           primary={
             <Typography>
-              {direction} {quantity} {cryptocurrency}
+              {order.direction} {order.quantity} {order.cryptocurrency}
             </Typography>
           }
-          secondary={`Expires on: ${new Date(expiration).toLocaleString()}`}
+          secondary={`Expires on: ${new Date(order.expiration).toLocaleString()}`}
         />
       </ListItem>
     );

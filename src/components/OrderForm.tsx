@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import { useForm, useController } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 import {
   Paper,
   MenuItem,
@@ -28,37 +28,27 @@ const CRYPTOCURRENCIES = [
 
 export const OrderForm = memo(() => {
   const addOrder = useOrderStore((state) => state.addOrder);
+  const updateOrder = useOrderStore((state) => state.updateOrder);
 
-  const { control, handleSubmit } = useForm<OrderFormValues>({
-    defaultValues: {
-      direction: OrderDirection.Buy,
-      cryptocurrency: Cryptocurrency.Bitcoin,
-      quantity: '',
-      expiration: '',
-    },
-  });
+  const { handleSubmit, watch, setValue } = useFormContext<OrderFormValues>();
 
   const { field: directionField } = useController({
     name: 'direction',
-    control,
     rules: { required: true },
   });
 
   const { field: cryptocurrencyField } = useController({
     name: 'cryptocurrency',
-    control,
     rules: { required: true },
   });
 
   const { field: quantityField } = useController({
     name: 'quantity',
-    control,
     rules: { required: true },
   });
 
   const { field: expirationField } = useController({
     name: 'expiration',
-    control,
     rules: { required: true },
   });
 
@@ -84,16 +74,28 @@ export const OrderForm = memo(() => {
     [expirationField],
   );
 
+  const stopEditing = useCallback(() => setValue('id', ''), [setValue]);
+
+  const orderId = watch('id');
+  const isEditing: boolean = !!orderId;
+
   const onSubmit = useCallback(
     (data: OrderFormValues) => {
-      addOrder({
+      const newOrder = {
         direction: data.direction,
         cryptocurrency: data.cryptocurrency,
         quantity: Number(data.quantity),
         expiration: data.expiration,
-      });
+      };
+
+      if (isEditing) {
+        updateOrder({ ...newOrder, id: orderId });
+        stopEditing();
+      } else {
+        addOrder(newOrder);
+      }
     },
-    [addOrder],
+    [addOrder, isEditing, orderId, stopEditing, updateOrder],
   );
 
   const valueInUsd: number =
@@ -160,8 +162,15 @@ export const OrderForm = memo(() => {
 
           {/* Submit Button */}
           <Button type="submit" variant="contained" color="primary">
-            Place Order
+            {isEditing ? 'Update Order' : 'Place Order'}
           </Button>
+
+          {/* Stop Editing Button */}
+          {isEditing && (
+            <Button onClick={stopEditing} variant="contained" color="secondary">
+              Stop Editing
+            </Button>
+          )}
         </Box>
       </form>
     </Paper>
