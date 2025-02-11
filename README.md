@@ -1,50 +1,66 @@
-# React + TypeScript + Vite
+# React OTC Order Management SPA
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+This project is a React-based OTC (Over-the-Counter) order management Single Page Application (SPA).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Deploy Preview
 
-## Expanding the ESLint configuration
+This project is deployed using Vercel. You can view the latest deployment here: [Live Preview](https://otc-react-r70k2otyt-damin-de-lios-projects.vercel.app/).
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Tech Stack
 
-- Configure the top-level `parserOptions` property like this:
+- **React** (18.3.1)
+- **Zustand** for state management
+- **React Query** for API data fetching
+- **React Router** for navigation
+- **MUI (Material UI)** for UI components
+- **React Hook Form** for form validation
+- **Day.js** for date and time handling
+- **ESLint & Prettier** for code formatting and linting
+- **Husky** for validating formatting on commit
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+## Setup
+
+### Prerequisites
+
+Make sure you have Node.js installed. Then, install the project dependencies:
+
+```sh
+npm install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Running the Project
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react';
+To start the development server:
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-});
+```sh
+npm run dev
+```
+
+## Key Libraries & Documentation
+
+- **React Hook Form** (form validation): [Docs](https://react-hook-form.com/docs)
+- **@hookform/error-message** (form error handling): [Docs](https://www.npmjs.com/package/@hookform/error-message)
+- **Day.js** (date manipulation):
+  - UTC Plugin: [Docs](https://day.js.org/docs/en/plugin/utc)
+  - Timezone Plugin: [Docs](https://day.js.org/docs/en/timezone/timezone)
+- **CoinGecko API** (crypto price data): [Docs](https://docs.coingecko.com/reference/simple-price)
+  - Note: Without an API Key, the rate limit for API calls is low but sufficient for testing.
+
+## Folder Structure
+
+```
+/src
+  ├── common         # Shared utilities and configurations
+  │   ├── api        # API service handlers
+  │   ├── helpers    # Helper functions
+  │   ├── types      # TypeScript type definitions
+  ├── components     # Reusable UI components
+  ├── hooks          # Custom React hooks
+  ├── pages          # Application views/pages
+  ├── providers      # Context and application providers
+  ├── state          # Zustand state management
+  ├── AppRouter.tsx  # Application routing setup
+  ├── main.tsx       # Entry point
 ```
